@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@layer base {
+  /* Global Input & Form Element Base Contrast Defaults */
+  input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  /* When input is inside standard light containers */
+  input:not([class*="text-"]),
+  select:not([class*="text-"]),
+  textarea:not([class*="text-"]) {
+    color: #0f172a;
+  }
+
+  /* Ensure inputs inside dark elements always display crisp white text */
+  .dark input, 
+  .dark select, 
+  .dark textarea,
+  [class*="bg-slate-900"] input, 
+  [class*="bg-slate-900"] select, 
+  [class*="bg-slate-900"] textarea,
+  [class*="bg-slate-950"] input, 
+  [class*="bg-slate-950"] select, 
+  [class*="bg-slate-950"] textarea,
+  [class*="bg-slate-800"] input, 
+  [class*="bg-slate-800"] select, 
+  [class*="bg-slate-800"] textarea {
+    color: #f8fafc;
+  }
+
+  /* Specific inputs with text-white class */
+  input.text-white,
+  select.text-white,
+  textarea.text-white {
+    color: #ffffff !important;
+  }
+
+  /* Specific inputs with text-slate-900 or dark text */
+  input.text-slate-900,
+  select.text-slate-900,
+  textarea.text-slate-900 {
+    color: #0f172a !important;
+  }
+
+  /* Placeholders styling */
+  input::placeholder, 
+  textarea::placeholder {
+    color: #94a3b8;
+  }
+
+  /* Dark mode / dark card placeholders */
+  [class*="bg-slate-900"] input::placeholder,
+  [class*="bg-slate-950"] input::placeholder,
+  [class*="bg-slate-800"] input::placeholder,
+  .dark input::placeholder {
+    color: #94a3b8;
+  }
+
+  /* Focus ring aesthetics */
+  input:focus, 
+  select:focus, 
+  textarea:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25);
+  }
+
+  /* Select dropdown options readability */
+  select option {
+    color: #0f172a;
+    background-color: #ffffff;
+  }
+
+  [class*="bg-slate-900"] select option,
+  [class*="bg-slate-800"] select option,
+  [class*="bg-slate-950"] select option {
+    color: #f8fafc;
+    background-color: #1e293b;
+  }
+}
+
+/* Print Certificate Rules */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #certificate-print-zone, #certificate-print-zone * {
+    visibility: visible;
+  }
+  #certificate-print-zone {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: white !important;
+  }
+}
+
+/* Custom Scrollbar for Sleek UI */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(13, 148, 136, 0.4);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 148, 136, 0.7);
+}

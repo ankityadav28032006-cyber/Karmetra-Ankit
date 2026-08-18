@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 120" width="100%" height="100%" fill="none">
+  <!-- KarMetra Official Brand Wordmark -->
+  <g transform="translate(10, 20)">
+    <!-- "Kar" in Deep Navy Blue -->
+    <text x="10" y="72" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif" font-size="76" font-weight="900" letter-spacing="-1.5" fill="#082142">
+      Kar
+    </text>
+
+    <!-- "Metra" in Authentic Brand Teal -->
+    <text x="142" y="72" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif" font-size="76" font-weight="900" letter-spacing="-1.5" fill="#00827F">
+      Metra
+    </text>
+
+    <!-- Optional PAN-INDIA Badge -->
+    <rect x="350" y="24" width="70" height="22" rx="6" fill="#F0FDFA" stroke="#99F6E4" stroke-width="1.5" />
+    <text x="385" y="39" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="800" fill="#0F766E" letter-spacing="1.2" text-anchor="middle">
+      PAN-INDIA
+    </text>
+  </g>
+</svg>

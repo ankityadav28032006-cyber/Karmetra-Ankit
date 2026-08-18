@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build and production output
+dist/
+dist-ssr/
+build/
+.next/
+out/
+
+# Environment files and secrets (NEVER commit secrets to Git)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env*.local
+!.env.example
+
+# Local databases and uploads
+uploads/
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Logs and runtime debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Editor and OS artifacts
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+

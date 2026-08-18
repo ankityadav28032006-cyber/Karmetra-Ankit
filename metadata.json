@@ -1,0 +1,6 @@
+{
+  "name": "KarMetra - Employment, Skills & Hiring Platform",
+  "description": "Pan-India employment and skill-development platform for IT, Non-IT, Business, and Blue-collar hiring with real OTP auth, LMS, assessments, verified certificates, and recruiter management.",
+  "requestFramePermissions": ["geolocation", "camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
