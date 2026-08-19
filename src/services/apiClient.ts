@@ -3,7 +3,41 @@ import { DOMAIN_CONFIG } from '../utils/domainConfig';
 
 // Resolves dynamically from VITE_API_BASE_URL or DOMAIN_CONFIG or relative '/api'
 const metaEnv = (import.meta as any)?.env || {};
-const BASE_URL = metaEnv.VITE_API_BASE_URL || DOMAIN_CONFIG.apiBaseUrl || '/api';
+
+export function resolveBaseUrl(): string {
+  // 1. If explicit VITE_API_BASE_URL is provided (e.g. from Netlify / build env vars)
+  const envUrl = metaEnv.VITE_API_BASE_URL?.trim();
+  if (envUrl) {
+    const cleanUrl = envUrl.replace(/\/+$/, '');
+    return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
+  }
+
+  // 2. If DOMAIN_CONFIG has a specific url
+  if (DOMAIN_CONFIG.apiBaseUrl && DOMAIN_CONFIG.apiBaseUrl !== '/api') {
+    const cleanUrl = DOMAIN_CONFIG.apiBaseUrl.replace(/\/+$/, '');
+    return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
+  }
+
+  // 3. In browser environment: check host
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    // Local development or same-host deployment
+    if (
+      hostname.includes('localhost') ||
+      hostname.includes('127.0.0.1') ||
+      hostname.includes('onrender.com') ||
+      hostname.includes('.run.app')
+    ) {
+      return '/api';
+    }
+    // Deployed Netlify / custom frontends: default to the live Render backend
+    return 'https://ankit-yadav-up-1.onrender.com/api';
+  }
+
+  return '/api';
+}
+
+export const BASE_URL = resolveBaseUrl();
 
 
 export class ApiError extends Error {
@@ -58,6 +92,9 @@ export const api = {
   put: <T>(endpoint: string, body?: any) => 
     request<T>(endpoint, { method: 'PUT', body: body !== undefined ? JSON.stringify(body) : undefined }),
   delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
+
+  // Health check
+  getHealth: () => request<any>('/health'),
 
   // Auth
   getOtpConfig: () =>

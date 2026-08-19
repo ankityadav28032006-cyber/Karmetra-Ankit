@@ -126,7 +126,7 @@ export const AdminDomainSettings: React.FC = () => {
   const handleRunHealthCheck = async () => {
     setCheckingHealth(true);
     try {
-      const res = await fetch('/api/health').then(r => r.json());
+      const res = await api.getHealth();
       setHealthStatus(res);
     } catch (e: any) {
       setHealthStatus({ status: 'error', message: e.message });

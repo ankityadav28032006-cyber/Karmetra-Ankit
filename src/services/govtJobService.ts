@@ -1,4 +1,5 @@
 import { GovernmentVacancy, GovtJobAlertPreference, MatchedGovtJobsResponse } from '../types';
+import { BASE_URL } from './apiClient';
 
 export interface GovtJobFilterParams {
   state?: string;
@@ -16,7 +17,7 @@ export const govtJobService = {
       if (params?.minEducation && params.minEducation !== 'All') query.set('minEducation', params.minEducation);
       if (params?.search) query.set('search', params.search);
 
-      const res = await fetch(`/api/govt-jobs?${query.toString()}`);
+      const res = await fetch(`${BASE_URL}/govt-jobs?${query.toString()}`);
       if (!res.ok) throw new Error('Failed to fetch government vacancies');
       const data = await res.json();
       return data.vacancies || [];
@@ -28,7 +29,7 @@ export const govtJobService = {
 
   async getGovtJobById(id: string): Promise<GovernmentVacancy | null> {
     try {
-      const res = await fetch(`/api/govt-jobs/${id}`);
+      const res = await fetch(`${BASE_URL}/govt-jobs/${id}`);
       if (!res.ok) throw new Error('Vacancy not found');
       const data = await res.json();
       return data.vacancy || null;
@@ -39,7 +40,7 @@ export const govtJobService = {
   },
 
   async toggleSaveGovtJob(id: string, token: string): Promise<{ saved: boolean; message: string }> {
-    const res = await fetch(`/api/govt-jobs/${id}/save`, {
+    const res = await fetch(`${BASE_URL}/govt-jobs/${id}/save`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -56,7 +57,7 @@ export const govtJobService = {
 
   async getSavedGovtJobs(token: string): Promise<{ savedVacancies: GovernmentVacancy[]; savedIds: string[] }> {
     try {
-      const res = await fetch('/api/candidate/saved-govt-jobs', {
+      const res = await fetch(`${BASE_URL}/candidate/saved-govt-jobs`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -75,7 +76,7 @@ export const govtJobService = {
 
   async getAlertPreferences(token: string): Promise<GovtJobAlertPreference | null> {
     try {
-      const res = await fetch('/api/candidate/govt-alerts', {
+      const res = await fetch(`${BASE_URL}/candidate/govt-alerts`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -89,7 +90,7 @@ export const govtJobService = {
   },
 
   async saveAlertPreferences(preferences: GovtJobAlertPreference, token: string): Promise<boolean> {
-    const res = await fetch('/api/candidate/govt-alerts', {
+    const res = await fetch(`${BASE_URL}/candidate/govt-alerts`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +107,7 @@ export const govtJobService = {
    */
   async getMatchedGovtJobs(token: string): Promise<MatchedGovtJobsResponse | null> {
     try {
-      const res = await fetch('/api/candidate/matched-govt-jobs', {
+      const res = await fetch(`${BASE_URL}/candidate/matched-govt-jobs`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -124,7 +125,7 @@ export const govtJobService = {
    */
   async triggerGovtAlertScan(token: string): Promise<{ success: boolean; createdCount: number } | null> {
     try {
-      const res = await fetch('/api/candidate/govt-alerts/trigger-notifications', {
+      const res = await fetch(`${BASE_URL}/candidate/govt-alerts/trigger-notifications`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -140,7 +141,7 @@ export const govtJobService = {
 
   // Admin APIs
   async getAllAdminGovtJobs(token: string): Promise<GovernmentVacancy[]> {
-    const res = await fetch('/api/admin/govt-jobs', {
+    const res = await fetch(`${BASE_URL}/admin/govt-jobs`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -152,7 +153,7 @@ export const govtJobService = {
 
   async saveAdminGovtJob(vacancy: Partial<GovernmentVacancy>, token: string): Promise<GovernmentVacancy> {
     const isEdit = !!vacancy.id;
-    const url = isEdit ? `/api/admin/govt-jobs/${vacancy.id}` : '/api/admin/govt-jobs';
+    const url = isEdit ? `${BASE_URL}/admin/govt-jobs/${vacancy.id}` : `${BASE_URL}/admin/govt-jobs`;
     const method = isEdit ? 'PUT' : 'POST';
 
     const res = await fetch(url, {
@@ -174,7 +175,7 @@ export const govtJobService = {
   },
 
   async deleteAdminGovtJob(id: string, token: string): Promise<boolean> {
-    const res = await fetch(`/api/admin/govt-jobs/${id}`, {
+    const res = await fetch(`${BASE_URL}/admin/govt-jobs/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`

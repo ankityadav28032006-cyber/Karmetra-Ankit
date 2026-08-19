@@ -1,11 +1,12 @@
 import { DynamicJobCategory } from '../types';
+import { BASE_URL } from './apiClient';
 
 export type JobCategoryDefinition = DynamicJobCategory;
 
 export const categoryService = {
   async getCategories(showAll: boolean = false): Promise<DynamicJobCategory[]> {
     try {
-      const res = await fetch(`/api/categories${showAll ? '?all=true' : ''}`);
+      const res = await fetch(`${BASE_URL}/categories${showAll ? '?all=true' : ''}`);
       if (!res.ok) throw new Error('Failed to fetch categories');
       const data = await res.json();
       return data.categories || [];
@@ -17,7 +18,7 @@ export const categoryService = {
 
   async saveCategory(category: Partial<DynamicJobCategory>, token: string): Promise<DynamicJobCategory> {
     const isEdit = !!category.id;
-    const url = isEdit ? `/api/admin/categories/${category.id}` : '/api/admin/categories';
+    const url = isEdit ? `${BASE_URL}/admin/categories/${category.id}` : `${BASE_URL}/admin/categories`;
     const method = isEdit ? 'PUT' : 'POST';
 
     const res = await fetch(url, {
@@ -39,7 +40,7 @@ export const categoryService = {
   },
 
   async deleteCategory(id: string, token: string): Promise<boolean> {
-    const res = await fetch(`/api/admin/categories/${id}`, {
+    const res = await fetch(`${BASE_URL}/admin/categories/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`

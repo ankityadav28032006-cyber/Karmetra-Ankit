@@ -6,7 +6,7 @@ import { apiRouter } from './server/routes';
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   // Allowed origins in production & development
   const allowedOrigins = [
@@ -23,17 +23,24 @@ async function startServer() {
   // Configured production CORS with credentials support
   app.use(cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or same-origin requests)
+      // Allow requests with no origin (like mobile apps, curl, server-to-server or same-origin requests)
       if (!origin) return callback(null, true);
       
-      // Check if origin matches allowed list or is a subdomain of karmetra.in
+      // Check if origin matches allowed list or is a subdomain of karmetra.in or render/cloudrun/netlify
       const isKarmetraDomain = /^https:\/\/([a-zA-Z0-9-]+\.)?karmetra\.in$/.test(origin);
-      const isCloudRunOrLocal = origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('.run.app');
+      const isNetlifyDomain = /^https:\/\/([a-zA-Z0-9-]+\.)?netlify\.app$/.test(origin);
+      const isCloudRunOrLocalOrRender = 
+        origin.includes('localhost') || 
+        origin.includes('127.0.0.1') || 
+        origin.includes('.run.app') || 
+        origin.includes('.onrender.com');
 
-      if (allowedOrigins.includes(origin) || isKarmetraDomain || isCloudRunOrLocal) {
+      if (allowedOrigins.includes(origin) || isKarmetraDomain || isNetlifyDomain || isCloudRunOrLocalOrRender) {
         return callback(null, true);
       }
-      return callback(new Error(`Origin ${origin} not allowed by KarMetra Production CORS policy`));
+      
+      // Allow all web clients in production & development
+      return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -47,11 +54,8 @@ async function startServer() {
   const uploadsDir = path.join(process.cwd(), 'uploads');
   app.use('/uploads', express.static(uploadsDir));
 
-  // Mount Unified REST API routes
-  app.use('/api', apiRouter);
-
-  // Health check and Domain Topology endpoint
-  app.get('/api/health', (req, res) => {
+  // Health check handler
+  const handleHealthCheck = (req: express.Request, res: express.Response) => {
     const host = req.get('host') || 'unknown';
     res.json({
       status: 'ok',
@@ -68,7 +72,15 @@ async function startServer() {
       helpline: '9049217304',
       headOffice: 'KarMetra Enterprise Hub, BKC, Mumbai, Maharashtra 400051'
     });
-  });
+  };
+
+  // Expose health check at both /api/health and /health
+  app.get('/api/health', handleHealthCheck);
+  app.get('/health', handleHealthCheck);
+
+  // Mount Unified REST API routes under /api and root fallback
+  app.use('/api', apiRouter);
+  app.use(apiRouter);
 
   // Vite middleware for development vs Static files in production
   if (process.env.NODE_ENV !== 'production') {
